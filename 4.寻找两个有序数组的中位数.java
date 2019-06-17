@@ -4,56 +4,51 @@
  * [4] 寻找两个有序数组的中位数
  */
 class Solution {
-    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        int len1 = nums1.length;
-        int len2 = nums2.length;
-        int flag = (len1 + len2)%2;
-        int mid;
-        if(flag == 1){
-            mid = len1 + (len2-len1)/2;
-        }else{
-            //偶数是2个  （mid+mid+1）/2
-            mid = len1 + (len2 - len1)/2 - 1;
+    public double findMedianSortedArrays(int[] A, int[] B) {
+        int m = A.length;
+        int n = B.length;
+        if (m > n) { // to ensure m<=n
+            int[] temp = A;
+            A = B;
+            B = temp;
+            int tmp = m;
+            m = n;
+            n = tmp;
         }
-        int i=0,j =0;
-        int index = 0;
-        int result = 0;
-        while(i< len1 && j<len2){
-           if(nums1[i] >= nums2[j]){
-               result = nums2[j];
-               j++;
-           }else{
-               result = nums1[i];
-               i++;
-           }
-           if(index == mid){
-                if(flag == 1){
-                    return result;
+        int iMin = 0, iMax = m, halfLen = (m + n + 1) / 2;
+        while (iMin <= iMax) {
+            int i = (iMin + iMax) / 2;
+            int j = halfLen - i;
+            if (i < iMax && B[j - 1] > A[i]) {
+                iMin = i + 1; // i is too small
+            } else if (i > iMin && A[i - 1] > B[j]) {
+                iMax = i - 1; // i is too big
+            } else { // i is perfect
+                int maxLeft = 0;
+                if (i == 0) {
+                    maxLeft = B[j - 1];
+                } else if (j == 0) {
+                    maxLeft = A[i - 1];
+                } else {
+                    maxLeft = Math.max(A[i - 1], B[j - 1]);
                 }
-                //get next
-                return (result + Math.min(nums1[i], nums2[j]))/2.0;
-           }
-           index ++;
-        }
-        while(i<len1 && i< index){
-            if(index == mid){
-                if(flag == 1){
-                   return nums1[i] ;
+                if ((m + n) % 2 == 1) {
+                    return maxLeft;
                 }
-                return (nums1[i] + nums1[i+1])/2.0;
-            }
-            index++;
-        }
-        while(j<len2 && j < index){
-            if(index == mid){
-                if(flag == 1){
-                   return nums2[j] ;
-                }
-                return (nums2[j] + nums2[j+1])/2.0;
-            }
-            index++;
 
+                int minRight = 0;
+                if (i == m) {
+                    minRight = B[j];
+                } else if (j == n) {
+                    minRight = A[i];
+                } else {
+                    minRight = Math.min(B[j], A[i]);
+                }
+
+                return (maxLeft + minRight) / 2.0;
+            }
         }
+        return 0.0;
+
     }
 }
-
