@@ -6,6 +6,15 @@
 
 // @lc code=start
 class Solution {
+    /**
+     * 
+     * dp(i,j) s前i长度，p前j长度是否匹配 dp(i,j) 看s[i-1] p[j-1]
+     * 
+     * 
+     * @param s
+     * @param p
+     * @return
+     */
     public boolean isMatch(String s, String p) {
         int m = s.length() + 1;
         int n = p.length() + 1;
